@@ -1,0 +1,1 @@
+Data includes signals and the noise from all measurements.  Correctly multiplies noise values by sigma/sqrt(2).

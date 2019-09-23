@@ -1,0 +1,1 @@
+This data includes signals entries and noise values, but only the noise values for the intensity measurments I think.  In the next version, I include what I think is all of the noise from all of the measurements.
