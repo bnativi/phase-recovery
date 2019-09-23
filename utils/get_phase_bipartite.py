@@ -10,9 +10,9 @@ def intensity_measurement_bipartite(num,deviation): # returns the intensity meas
             noise = complex_random_noise(deviation)
         return np.sqrt(np.real(num*num.conjugate() + noise))    # gets the intensity measurement, note that we only take the real part of the noise as the intensity measurement should give a nonnegative real value
 
-def magnitudes(array, deviation):      # makes an intensity measurment for each entry of x
+def magnitudes(array, deviation, old_length):      # makes an intensity measurment for each entry of x
     magnitudes = np.zeros(len(array))  # array to store the magnitudes estimates
-    for i in range(len(array)):
+    for i in range(old_length):
         magnitudes[i] = intensity_measurement_bipartite(array[i],deviation) # take each measurement
     return magnitudes
 
@@ -111,12 +111,9 @@ def get_phase_bipartite(x,deviation): #This function takes a vector of length 2*
     
     x_hat = np.zeros(len(x), complex)     # the return of this function is the estimate x_hat
     
-    while(True):       # this while loop ensures that the max index is not the index of a 0 entry that was appended to x
-        magnitude_array = magnitudes(x, deviation) # take N measurements to get the magnitudes of each entry
-        (even_ones_max_index, even_ones_max_mag, odd_ones_max_index, odd_ones_max_mag) = find_max_even_and_odd(magnitude_array)
-        (max_index, max_mag, second_index, second_mag, parity) = overall_max(even_ones_max_index, even_ones_max_mag, odd_ones_max_index, odd_ones_max_mag)
-        if (max_index < old_length):
-            break
+    magnitude_array = magnitudes(x, deviation, old_length) # take N measurements to get the magnitudes of each entry
+    (even_ones_max_index, even_ones_max_mag, odd_ones_max_index, odd_ones_max_mag) = find_max_even_and_odd(magnitude_array)
+    (max_index, max_mag, second_index, second_mag, parity) = overall_max(even_ones_max_index, even_ones_max_mag, odd_ones_max_index, odd_ones_max_mag)
         
     x_hat[max_index] = max_mag       # puts the estimate of the starting vertex in x_hat
     
