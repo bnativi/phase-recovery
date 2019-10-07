@@ -82,7 +82,9 @@ def overall_max(even_ones_max_index, even_ones_max_mag, odd_ones_max_index, odd_
     else:
         return (odd_ones_max_index, odd_ones_max_mag, even_ones_max_index, even_ones_max_mag, 1)
 
-def check_if_power_of_two(array): # this function checks whether the length of the array is a power of 2 and extends the array to have length a power of 2 if necessary
+#-------------------------------------------------------------------------------------------------------------------------------------------
+
+def check_if_power_of_two(array): # subfunction of phase recovery algorithms.  This function checks whether the length of the array is a power of 2 and extends the array to have length a power of 2 if necessary
     m = math.log(len(array),2)           # compute m from the length of the vector
     if not float(m).is_integer():        # algorithm works when length of x is a power of 2, but can work with other vectors by appending on enough 0's to make the length of x a power of 2
         m = int(round(m+0.5))                 # rounds up m to the nearest integer and records the old value of m in m_old
@@ -101,20 +103,13 @@ def check_if_power_of_two(array): # this function checks whether the length of t
     
     return (m, final, power_of_two, old_length)
 
-#-------------------------------------------------------------------------------------------------------------------------------------------
-
-def get_phase_bipartite(x,deviation): #This function takes a vector of length 2**m for some positive integer m and uses intensity and relative phase measurements to return that vector up to a global phase factor
-    if (len(x) == 1):                    # if vector is of length one, just return an intensity measurement of the entry
-        return np.array([intensity_measurement_bipartite(x[0],deviation)])
-
-    (m, x, power_of_two, old_length) = check_if_power_of_two(x) # extends the vector x if necessary to have lenght a power of 2
-    
-    x_hat = np.zeros(len(x), complex)     # the return of this function is the estimate x_hat
-    
+def intensities_and_max_entries(x,deviation, old_length): # subfunction of phase recovery algorithms     
     magnitude_array = magnitudes(x, deviation, old_length) # take N measurements to get the magnitudes of each entry
     (even_ones_max_index, even_ones_max_mag, odd_ones_max_index, odd_ones_max_mag) = find_max_even_and_odd(magnitude_array)
-    (max_index, max_mag, second_index, second_mag, parity) = overall_max(even_ones_max_index, even_ones_max_mag, odd_ones_max_index, odd_ones_max_mag)
-        
+    return overall_max(even_ones_max_index, even_ones_max_mag, odd_ones_max_index, odd_ones_max_mag)
+
+def estimate_x(max_index, max_mag, second_index, second_mag, parity, x, m, deviation, power_of_two, old_length): # subfunction of phase recovery algorithms   
+    x_hat = np.zeros(len(x), complex)     # the return of this function is the estimate x_hat
     x_hat[max_index] = max_mag       # puts the estimate of the starting vertex in x_hat
     
     if parity:                       # valid_indices1 are the indices adjacent to max_index and valid_indices2 are the indices adjacent to second_index
@@ -138,8 +133,18 @@ def get_phase_bipartite(x,deviation): #This function takes a vector of length 2*
         x_hat = np.zeros(old_length, complex)
         for i in range(old_length):
             x_hat[i] = temp[i]
-    
+
     return x_hat, global_phase_factor
+
+#-------------------------------------------------------------------------------------------------------------------
+
+def get_phase_bipartite(x,deviation): #This function takes a vector of length 2**m for some positive integer m and uses intensity and relative phase measurements to return that vector up to a global phase factor
+    if (len(x) == 1):                    # if vector is of length one, just return an intensity measurement of the entry
+        return np.array([intensity_measurement_bipartite(x[0],deviation)])
+
+    (m, x, power_of_two, old_length) = check_if_power_of_two(x) # extends the vector x if necessary to have lenght a power of 2
+    (max_index, max_mag, second_index, second_mag, parity) = intensities_and_max_entries(x,deviation, old_length)
+    return estimate_x(max_index, max_mag, second_index, second_mag, parity, x, m, deviation, power_of_two, old_length)
 
 
 # TESTING 7/30/19 to make sure that the algorithm can handle when the length of x is not a power of 2 (by appending zeros)
