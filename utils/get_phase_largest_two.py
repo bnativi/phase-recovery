@@ -4,6 +4,7 @@ from utils.random import *
 from utils.relative_phase_noise import *
 import itertools # used for combinations and permutations
 from utils.get_phase_bipartite import *
+from utils.Mixon_comparison_2 import *
 
 def overall_largest_two(magnitude_array): # this function finds the index corresponding to the largest magnitude for both the even ones and odd ones.  For whichever is bigger, it also finds the second largest for that half of the vector
     (even_ones_index, even_ones_maximum, odd_ones_index, odd_ones_maximum) = find_max_even_and_odd(magnitude_array)
