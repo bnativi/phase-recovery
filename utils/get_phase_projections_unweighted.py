@@ -154,7 +154,7 @@ def get_phase_projections_unweighted(x, deviation, entries_to_combine): #This fu
 
     return x_final, 1
 
-def test_projections_unweighted_varying_k(file_name): # given a certain number of trials per value of N, this function evaluates the average MSE (relative error not squared relative error) of getPhaseNoiseBipartite in a way that is comparable to the paper Phase Retrieval with Polarization by Mixon
+def test_projections_unweighted_varying_k(file_name, repeats): # given a certain number of trials per value of N, this function evaluates the average MSE (relative error not squared relative error) of getPhaseNoiseBipartite in a way that is comparable to the paper Phase Retrieval with Polarization by Mixon
     signal_vectors, noise_vectors = get_vectors_and_noise_from_Mixon(file_name)
     
     average_RE_projections_0 = []               # records the average MSE for each value of N (note this is just the bipartite algorithm if no projections are used)
@@ -174,7 +174,7 @@ def test_projections_unweighted_varying_k(file_name): # given a certain number o
         
         ### bipartite k=0
         x_hat_array = []
-        for j in range(8):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
+        for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
             (x_hat_bipartite, gpf) = get_phase_projections_unweighted(x, noise_deviation, 0) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
             x_hat_array.append(x_hat_bipartite*gpf)
         
@@ -183,7 +183,7 @@ def test_projections_unweighted_varying_k(file_name): # given a certain number o
         
         ### projections k=1
         x_hat_array = []
-        for j in range(8):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
+        for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
             (x_hat_projections1, gpf) = get_phase_projections_unweighted(x, noise_deviation, 1) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
             x_hat_array.append(x_hat_projections1*gpf)
         
@@ -192,7 +192,7 @@ def test_projections_unweighted_varying_k(file_name): # given a certain number o
 
         ### projections k=2
         x_hat_array = []
-        for j in range(8):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
+        for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
             (x_hat_projections2, gpf) = get_phase_projections_unweighted(x, noise_deviation, 2) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
             x_hat_array.append(x_hat_projections2*gpf)
         
@@ -201,7 +201,7 @@ def test_projections_unweighted_varying_k(file_name): # given a certain number o
         
         ### projections k=3
         x_hat_array = []
-        for j in range(8):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
+        for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
             (x_hat_projections3, gpf) = get_phase_projections_unweighted(x, noise_deviation, 3) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
             x_hat_array.append(x_hat_projections3*gpf)
         
