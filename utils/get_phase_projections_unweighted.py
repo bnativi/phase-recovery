@@ -155,77 +155,90 @@ def get_phase_projections_unweighted(x, deviation, entries_to_combine): #This fu
     return x_final, 1
 
 def test_projections_unweighted_varying_k(file_name, repeats): # given a certain number of trials per value of N, this function evaluates the average MSE (relative error not squared relative error) of getPhaseNoiseBipartite in a way that is comparable to the paper Phase Retrieval with Polarization by Mixon
-    signal_vectors, noise_vectors = get_vectors_and_noise_from_Mixon(file_name)
+	signal_vectors, noise_vectors = get_vectors_and_noise_from_Mixon(file_name)
     
-    average_RE_projections_0 = []               # records the average MSE for each value of N (note this is just the bipartite algorithm if no projections are used)
-    average_RE_projections_1 = []               # records the average MSE for each value of N
-    average_RE_projections_2 = []               # records the average MSE for each value of N
-    average_RE_projections_3 = []               # records the average MSE for each value of N
+	average_RE_projections_0 = []               # records the average MSE for each value of N (note this is just the bipartite algorithm if no projections are used)
+	average_RE_projections_1 = []               # records the average MSE for each value of N
+	average_RE_projections_2 = []               # records the average MSE for each value of N
+	average_RE_projections_3 = []               # records the average MSE for each value of N
+	average_RE_projections_8 = []               # records the average MSE for each value of N
 
-
-    for i in tqdm(range(len(signal_vectors))):
+	for i in tqdm(range(len(signal_vectors))):
 #         print(i)
-        x = signal_vectors[i]   # create the signal of length N with standard deviation 1/sqrt(N)
+		x = signal_vectors[i]   # create the signal of length N with standard deviation 1/sqrt(N)
         
-        N = len(x)
-        m = int(math.log(N,2))     # get m = log(N) always rounding down
+		N = len(x)
+		m = int(math.log(N,2))     # get m = log(N) always rounding down
         
-        noise_deviation  = 0.4/np.sqrt(N)          # nu   ~ N(0, (0.4)^2 /N  )
+		noise_deviation  = 0.4/np.sqrt(N)          # nu   ~ N(0, (0.4)^2 /N  )
         
         ### bipartite k=0
-        x_hat_array = []
-        for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
-            (x_hat_bipartite, gpf) = get_phase_projections_unweighted(x, noise_deviation, 0) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
-            x_hat_array.append(x_hat_bipartite*gpf)
+		x_hat_array = []
+		for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
+			(x_hat_bipartite, gpf) = get_phase_projections_unweighted(x, noise_deviation, 0) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
+			x_hat_array.append(x_hat_bipartite*gpf)
         
-        x_hat = np.average(x_hat_array, axis=0) # average the log(N) estimates for each entry             
-        average_RE_projections_0.append(relative_error(x_hat, x))
+		x_hat = np.average(x_hat_array, axis=0) # average the log(N) estimates for each entry             
+		average_RE_projections_0.append(relative_error(x_hat, x))
         
         ### projections k=1
-        x_hat_array = []
-        for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
-            (x_hat_projections1, gpf) = get_phase_projections_unweighted(x, noise_deviation, 1) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
-            x_hat_array.append(x_hat_projections1*gpf)
+		x_hat_array = []
+		for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
+			(x_hat_projections1, gpf) = get_phase_projections_unweighted(x, noise_deviation, 1) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
+			x_hat_array.append(x_hat_projections1*gpf)
         
-        x_hat = np.average(x_hat_array, axis=0) # average the log(N) estimates for each entry             
-        average_RE_projections_1.append(relative_error(x_hat, x))
+		x_hat = np.average(x_hat_array, axis=0) # average the log(N) estimates for each entry             
+		average_RE_projections_1.append(relative_error(x_hat, x))
 
         ### projections k=2
-        x_hat_array = []
-        for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
-            (x_hat_projections2, gpf) = get_phase_projections_unweighted(x, noise_deviation, 2) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
-            x_hat_array.append(x_hat_projections2*gpf)
+		x_hat_array = []
+		for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
+			(x_hat_projections2, gpf) = get_phase_projections_unweighted(x, noise_deviation, 2) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
+			x_hat_array.append(x_hat_projections2*gpf)
         
-        x_hat = np.average(x_hat_array, axis=0) # average the log(N) estimates for each entry             
-        average_RE_projections_2.append(relative_error(x_hat, x))
+		x_hat = np.average(x_hat_array, axis=0) # average the log(N) estimates for each entry             
+		average_RE_projections_2.append(relative_error(x_hat, x))
         
         ### projections k=3
-        x_hat_array = []
-        for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
-            (x_hat_projections3, gpf) = get_phase_projections_unweighted(x, noise_deviation, 3) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
-            x_hat_array.append(x_hat_projections3*gpf)
+		x_hat_array = []
+		for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
+			(x_hat_projections3, gpf) = get_phase_projections_unweighted(x, noise_deviation, 3) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
+			x_hat_array.append(x_hat_projections3*gpf)
         
-        x_hat = np.average(x_hat_array, axis=0) # average the log(N) estimates for each entry             
-        average_RE_projections_3.append(relative_error(x_hat, x))
+		x_hat = np.average(x_hat_array, axis=0) # average the log(N) estimates for each entry             
+		average_RE_projections_3.append(relative_error(x_hat, x))
+
+        ### projections k=8 for N=20 to 128
+		if(i>2):
+			x_hat_array = []
+			for j in range(repeats):                      # make log(N) estimates of the signal for a total of O(NlogN) measurements like in Mixon paper
+				(x_hat_projections3, gpf) = get_phase_projections_unweighted(x, noise_deviation, 8) # run the algorithm with noise standard deviation of sigma/sqrt(N) where sigma = 0.4
+				x_hat_array.append(x_hat_projections3*gpf)
+	        
+			x_hat = np.average(x_hat_array, axis=0) # average the log(N) estimates for each entry             
+			average_RE_projections_8.append(relative_error(x_hat, x))
+		else:
+			average_RE_projections_8.append(0)
         
         # end for loop
     
-    x_axis = []
-    for signal in signal_vectors: 
-        x_axis.append(len(signal))
+	x_axis = []
+	for signal in signal_vectors: 
+		x_axis.append(len(signal))
         
-    plt.plot(x_axis, average_RE_projections_0, color = 'royalblue', marker = 'o', linestyle = '-', linewidth =1, markersize = 4)
-    plt.plot(x_axis, average_RE_projections_1, color = 'cadetblue', marker = 'o', linestyle = '-', linewidth =1, markersize = 4)
-    plt.plot(x_axis, average_RE_projections_2, color = 'mediumseagreen', marker = 'o', linestyle = '-', linewidth =1, markersize = 4)
-    plt.plot(x_axis, average_RE_projections_3, color = 'yellowgreen', marker = 'o', linestyle = '-', linewidth =1, markersize = 4)
-    
+	plt.plot(x_axis, average_RE_projections_0, color = 'royalblue', marker = 'o', linestyle = '-', linewidth =1, markersize = 3)
+	plt.plot(x_axis, average_RE_projections_1, color = 'cadetblue', marker = 'o', linestyle = '-', linewidth =1, markersize = 3)
+	plt.plot(x_axis, average_RE_projections_2, color = 'mediumseagreen', marker = 'o', linestyle = '-', linewidth =1, markersize = 3)
+	plt.plot(x_axis, average_RE_projections_3, color = 'yellowgreen', marker = 'o', linestyle = '-', linewidth =1, markersize = 3)
+	plt.plot(x_axis, average_RE_projections_8, color = 'gold', marker = 'o', linestyle = '-', linewidth =1, markersize = 3)
+
     #CHANGE
-    title = "RE of Projections for k=0,1,2,3"
-    plt.title(title)
-    plt.xlabel("N")
-    plt.ylabel("Relative Error")
+	title = "RE of Projections for k=0,1,2,3"
+	plt.title(title)
+	plt.xlabel("N")
+	plt.ylabel("Relative Error")
 #     upperY = 7*nsr                         # this choise of upperY makes the graphs look nice
-    plt.axis([0, 130, 0, 0.02])            # set axes
-    plt.show
-    plt.savefig('graphs/Ben_projections_unweighted_128.png')
-    return average_RE_projections_0, average_RE_projections_1, average_RE_projections_2, average_RE_projections_3
+	plt.axis([0, 130, 0, 0.02])            # set axes
+	plt.show
+    plt.savefig('graphs/Ben_projections_unweighted_128_k=0,1,2,3,8.pdf')
+	return average_RE_projections_0, average_RE_projections_1, average_RE_projections_2, average_RE_projections_3
